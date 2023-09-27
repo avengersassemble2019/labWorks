@@ -23,14 +23,14 @@ while (true) {
   }
 }
 console.clear();
-console.log(`\nAdding ${newDebt}...`, `${amountDebt}...`);
+console.log(`Adding ${newDebt}...`, `${amountDebt}...`);
 
 if (fs.existsSync("./debts") === false) {
   console.error("Error creating file");
 } else {
   try {
-    fs.appendFileSync("./debts", `${newDebt}\n`, "utf8");
-    fs.appendFileSync("./debts", `${amountDebt}\n`, "utf8");
+    fs.appendFileSync("./debts", `\nDebtor:${newDebt},`, "utf8");
+    fs.appendFileSync("./debts", `Amount of:${amountDebt}`, "utf8");
     console.log("\nAdded Successfully!");
   } catch (err) {
     console.error(`${err}`);

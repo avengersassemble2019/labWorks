@@ -24,14 +24,14 @@ while (true) {
     }
 }
 console.clear();
-console.log("\nAdding ".concat(newDebt, "..."), "".concat(amountDebt, "..."));
+console.log("Adding ".concat(newDebt, "..."), "".concat(amountDebt, "..."));
 if (fs.existsSync("./debts") === false) {
     console.error("Error creating file");
 }
 else {
     try {
-        fs.appendFileSync("./debts", "".concat(newDebt, "\n"), "utf8");
-        fs.appendFileSync("./debts", "".concat(amountDebt, "\n"), "utf8");
+        fs.appendFileSync("./debts", "\nDebtor:".concat(newDebt, ","), "utf8");
+        fs.appendFileSync("./debts", "Amount of:".concat(amountDebt), "utf8");
         console.log("\nAdded Successfully!");
     }
     catch (err) {

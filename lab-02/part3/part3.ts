@@ -37,6 +37,7 @@ async function sendToDatabase(formData: {
     console.log('Error connecting to the database:', err);
     throw err;
   }
+
 }
 
 const server = http.createServer(async (request: IncomingMessage, response: ServerResponse) => {
@@ -56,6 +57,7 @@ const server = http.createServer(async (request: IncomingMessage, response: Serv
         .writeHead(500, { 'Content-Type': 'text/plain' })
         .end('Internal Server Error');
     }
+
   } else if (url === '/apply-loan-success' && method === 'POST') {
     // Your HTML response
     const html = /* html */ `
@@ -71,6 +73,7 @@ const server = http.createServer(async (request: IncomingMessage, response: Serv
       </body>
       </html>
     `;
+
     response.writeHead(200, { 'Content-Type': 'text/html' }).end(html);
 
     let body = '';
@@ -89,8 +92,6 @@ const server = http.createServer(async (request: IncomingMessage, response: Serv
       const phoneNumberInt = parseFloat(phone_number);
       const token = crypto.randomBytes(20).toString('base64url');
 
-
-
       try {
         const result = await sendToDatabase({
           token,
@@ -107,7 +108,6 @@ const server = http.createServer(async (request: IncomingMessage, response: Serv
         console.error(error);
       }
     });
-
 
   } else if (url === '/loan-status' && method === 'GET') {
 
@@ -164,7 +164,7 @@ const server = http.createServer(async (request: IncomingMessage, response: Serv
   }
 });
 ;
-// DONT TOUCH TIS CODE
+
 function generateLoanStatusHtml(loanData: any[]) {
   const loanStatusHtml = /* html */ `
     <!DOCTYPE html>
@@ -207,7 +207,6 @@ async function fetchLoanDataFromDatabase(): Promise<any[]> {
     throw error;
   }
 }
-
 
 server.listen(3000, () => {
   console.log('Server started at http://localhost:3000');

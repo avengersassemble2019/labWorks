@@ -36,40 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.generateLoanStatusHtml = void 0;
-var database_1 = require("./database");
-function generateLoanStatusHtml(loanData) {
+exports.sendToDatabase = exports.pool = void 0;
+var pg_1 = require("pg");
+exports.pool = new pg_1.Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'labs',
+    password: 'BASILA2001',
+    port: 5432
+});
+function sendToDatabase(formData) {
     return __awaiter(this, void 0, void 0, function () {
-        var loanStatusHtml;
-        return __generator(this, function (_a) {
-            loanStatusHtml = "\n    <!DOCTYPE html>\n    <html lang=\"en\">\n    <head>\n      <meta charset=\"UTF-8\">\n      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n      <title>Loan Status</title>\n    </head>\n    <body>\n      <h1>Loan Status</h1>\n      Loan status: <input type=\"text\" name=\"loan_amount\"><button type=\"submit\">Search Loan</button>\n      <ul>\n        <li>".concat(loanData.map(function (loan) { return "\n          <li> Name: ".concat(loan.name, "</li> \n          <li> Email: ").concat(loan.email, " </li> \n          <li> Phone: ").concat(loan.phone_number, "</li> \n          <li> Amount: ").concat(loan.loan_amount, " </li> \n          <li> Reason: ").concat(loan.reason, "</li> \n          <li> token: ").concat(loan.token, "</li> \n          <li> Date and time right now: ").concat(new Date().toLocaleString(), "</li> \n          <li> </li>\n        "); }).join(' '), "\n      </ul>\n    </body>\n    </html>\n  ");
-            return [2 /*return*/, loanStatusHtml];
-        });
-    });
-}
-exports.generateLoanStatusHtml = generateLoanStatusHtml;
-function fetchLoanDataFromDatabase() {
-    return __awaiter(this, void 0, void 0, function () {
-        var client, query, result, error_1;
+        var query, values, client, result, err_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    return [4 /*yield*/, database_1.pool.connect()];
+                    query = "\n    INSERT INTO loans (name, email, phone_number, loan_amount, reason, token)\n    VALUES ($1, $2, $3, $4, $5, $6)\n  \n    RETURNING *\n  ";
+                    values = [formData.name, formData.email, formData.phone_number, formData.loan_amount, formData.reason, formData.token];
+                    _a.label = 1;
                 case 1:
-                    client = _a.sent();
-                    query = 'SELECT * FROM loans';
-                    return [4 /*yield*/, client.query(query)];
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, exports.pool.connect()];
                 case 2:
-                    result = _a.sent();
-                    client.release();
-                    return [2 /*return*/, result.rows];
+                    client = _a.sent();
+                    result = client.query(query, values);
+                    console.log('Data sent to db');
+                    return [2 /*return*/, result];
                 case 3:
-                    error_1 = _a.sent();
-                    console.error('Error fetching loan data:', error_1);
-                    throw error_1;
+                    err_1 = _a.sent();
+                    console.log('Error connecting to the database:', err_1);
+                    throw err_1;
                 case 4: return [2 /*return*/];
             }
         });
     });
 }
+exports.sendToDatabase = sendToDatabase;
